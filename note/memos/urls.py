@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework import serializers, viewsets 
 from .models import Memo
+from . import views
 
 # MemoSerializer 정의
 class MemoSerializer(serializers.ModelSerializer):
@@ -19,5 +20,6 @@ router = DefaultRouter()
 router.register(r'memos', MemoViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(router.urls)),  # API 경로를 router.urls로 연결
+    path('memos/', views.memo_list, name='memo-list'),
 ]
