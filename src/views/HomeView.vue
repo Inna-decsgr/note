@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <h2>메모 목록</h2>
-    <ul v-if="memos.length">
-      <li v-for="memo in memos" :key="memo.id">
-        <h3>{{ memo.title }}</h3>
-        <p>{{ memo.content }}</p>
-      </li>
-    </ul>
-    <p v-else>작성된 메모가 없습니다.</p>
+  <div class="home">
+    <span class="title">메모 목록</span>
+    <MemoList :memos="memos" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import MemoList from '@/components/MemoList.vue'
 
 export default {
+  components: {
+    MemoList
+  },
   data() {
     return {
       memos: []
@@ -35,3 +33,22 @@ export default {
   }
 }
 </script>
+
+<style>
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 25px;
+}
+</style>
