@@ -4,6 +4,7 @@
       <li v-for="memo in memos" :key="memo.id">
         <span class="memo-title">{{ memo.title }}</span>
         <p class="memo-content">{{ memo.content }}</p>
+        <button>메모 수정</button>
       </li>
     </ul>
     <p v-else>작성된 메모가 없습니다.</p>
