@@ -21,7 +21,11 @@ export default {
   },
   methods: {
     editmemo(memo) {
-      this.$router.push('/create');
+      // memo 데이터를 가지고 /create 경로로 이동
+      this.$router.push({
+        path: '/create',
+        query: { memoId: memo.id }
+      });
       console.log('수정할 메모', memo);
     }
   }
