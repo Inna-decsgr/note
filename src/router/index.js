@@ -11,7 +11,11 @@ const routes = [
   {
     path: '/create',
     name: 'create-memo',
-    component: CreateMemo
+    component: CreateMemo,
+    props: route => ({
+      memoId: route.query.memoId || null,  // memoId가 있으면 전달하고, 없으면 null
+      isEdit: !!route.query.memoId  // memoId가 있으면 true로 설정 (수정 모드)
+    })
   },
 ]
 
