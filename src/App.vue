@@ -2,8 +2,8 @@
   <div id="id" class="app-container">
     <div class="content-wrapper">
       <nav class="nav">
-        <router-link to="/">Home</router-link>
-        <router-link to="/create">메모 작성</router-link>
+        <router-link to="/" active-class="active-link">Home</router-link>
+        <router-link to="/create" active-class="active-link">메모 작성</router-link>
       </nav>
     <router-view/>
     </div>
@@ -32,6 +32,11 @@
     box-sizing: border-box;
     overflow: auto;
 }
+ol, ul {
+  list-style: none;
+  padding: 0 !important;  
+  margin: 0;       
+}
 
 .nav {
   margin-bottom: 20px;
@@ -40,14 +45,14 @@
 
 .nav a {
   color: black;
-  font-weight: bold;
   text-decoration: none;
   margin: 0 20px 20px 0;
 }
 
-ol, ul {
-  list-style: none;
-  padding: 0 !important;  
-  margin: 0;       
+
+.nav a.active-link {
+  text-decoration: underline;
+  font-weight: bold;
 }
+
 </style>
