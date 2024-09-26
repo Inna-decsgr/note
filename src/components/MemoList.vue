@@ -6,12 +6,14 @@
           <span class="memo-title">{{ memo.title }}</span>
           <p class="memo-content">{{ memo.content }}</p>
         </div>
-        <button @click="editmemo(memo)" class="btn btn-secondary" style="width: 100px;  line-height:1 ;">메모 수정</button>
+        <button @click="editmemo(memo)" class="btn btn-secondary" style="width: 100px;  line-height:1; margin-right: 4px">메모 수정</button>
+        <button @click="deletememo(memo.id)" class="btn btn-secondary" style="width: 100px;  line-height:1 ;">삭제</button>
       </li>
     </ul>
     <p v-else>작성된 메모가 없습니다.</p>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -29,6 +31,10 @@ export default {
         query: { memoId: memo.id }
       });
       console.log('수정할 메모', memo);
+    },
+    async deletememo(memoId) {
+      // 삭제 요청을 부모 컴포넌트에 전달, 부모 컴포넌트의 삭제 로직 실행시키도록
+      this.$emit('delete-memo', memoId);
     }
   }
 }
