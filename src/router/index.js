@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CreateMemo from '../views/CreateMemo.vue'
+import MemoDetail from '../views/MemoDetail.vue'
 
 const routes = [
   {
@@ -17,6 +18,11 @@ const routes = [
       isEdit: !!route.query.memoId  // memoId가 있으면 true로 설정 (수정 모드)
     })
   },
+  {
+    path: '/detail',
+    name: 'memo-detail',
+    component: MemoDetail
+  }
 ]
 
 const router = createRouter({
