@@ -1,14 +1,30 @@
 <template>
   <div class="memo-list">
     <ul v-if="memos.length">
-      <li v-for="memo in memos" :key="memo.id" class="d-flex justify-content-between align-items-center">
+      <li v-for="memo in memos" :key="memo.id" @click="handleClick(memo)" class="d-flex justify-content-between align-items-center">
         <div class="flex-grow-1 me-3">
-          <span class="memo-title">{{ memo.title }}</span>
-          <p class="memo-content">{{ memo.content }}</p>
+          <span class="memo-title">
+            {{ memo.title }} <span v-if="memo.is_locked">🔒</span>
+          </span>
+
+          <!--비밀번호 입력 폼 표시 여부-->
+          <div v-if="memo.is_locked && isPasswordFormVisible[memo.id]">
+            <p>이 메모는 잠금된 메모입니다. 비밀번호를 입력해주세요.</p>
+            <input 
+              type="password" 
+              v-model="password" 
+              placeholder="비밀번호를 입력해주세요"
+            >
+            <button @click="unlockMemo(memo)">확인</button>
+            <p v-if="error">{{ error }}</p>
+          </div>
+
+          <!-- 비밀전호를 입력하지 않으면 내용 숨김-->
+          <p v-else class="memo-content">
+            {{ memo.content }}
+          </p>
           <span class="memo-date">{{ formatDate(memo.created_at) }}</span>
         </div>
-        <button @click="editmemo(memo)" class="btn btn-secondary custom-btn">메모 수정</button>
-        <button @click="deletememo(memo.id)" class="btn btn-secondary custom-btn">삭제</button>
         <button class="starbutton btn btn-secondary custom-btn" @click="toggleBookmark(memo)">
           <font-awesome-icon :icon="memo.is_bookmark ? 'fas fa-star' : 'far fa-star'" />
         </button>
@@ -30,21 +46,60 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      password: '',
+      error: '',
+      // 메모별로 비밀번호 입력 폼 표시 여부를 관리하는 객체
+      isPasswordFormVisible: {},
+    }
+  },
   methods: {
+    handleClick(memo) {
+      if (memo.is_locked) {
+        this.showPasswordForm(memo);
+      } else {
+        this.gotoDetail(memo);
+      }
+    },
+    // 잠금된 메모를 클릭하면 비밀번호 입력 폼을 표시
+    showPasswordForm(memo) {
+      this.isPasswordFormVisible[memo.id] = true;
+      this.error = '';
+      this.password = '';
+    },
+    // 서버에 비밀번호를 전송해서 잠금 해제 요청
+    async unlockMemo(memo) {
+      try {
+        const response = await axios.post(`http://localhost:8000/api/memos/${memo.id}/view/`, {
+          password: this.password,
+        });
+
+        // 서버 응답 처리
+        const data = response.data;
+        memo.content = data.content;
+        this.isPasswordFormVisible[memo.id] = false;  // 잠금 해제 시 촘 숨김
+        this.password = '';  // 비밀번호 입력 필드 초기화
+        this.error = '';  // 오류 메시지 초기화
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          this.error = error.response.data.error;  // 비밀번호 틀림
+        } else {
+          console.error('잠금 해제 오류:', error);
+          this.error = '서버 오류가 발생했습니다.'; // 서버 오류 처리
+        }
+      }
+    },
     formatDate(createdAt) {
       return formatDate(createdAt);
     },
-    editmemo(memo) {
-      // 수정 버튼을 클릭하면 memo 데이터를 가지고 /create 경로로 이동
+    gotoDetail(memo) {
       this.$router.push({
-        path: '/create',
-        query: { memoId: memo.id }
-      });
-      console.log('수정할 메모', memo);
-    },
-    async deletememo(memoId) {
-      // 삭제 요청을 부모 컴포넌트에 전달, 부모 컴포넌트의 삭제 로직 실행시키도록
-      this.$emit('delete-memo', memoId);
+        path: '/detail',
+        query: {
+          memo: JSON.stringify(memo)  // memo 객체를 JSON 문자열로 변환하여 전송
+        }
+      })
     },
     async toggleBookmark(memo) {
       try {
