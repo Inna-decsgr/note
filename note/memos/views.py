@@ -47,3 +47,10 @@ def create_memo(request):
 
 
 # 메모 조회
+def view_memo(request, memo_id):
+    memo = get_object_or_404(Memo, id=memo_id)
+    if memo.is_locked:
+        entered_password = request.POST.get('password')
+        if entered_password != memo.password:
+            return JsonResponse({"error": "비밀번호가 틀렸습니다."}, status=403)
+    return JsonResponse({"title": memo.title, "content": memo.content})
