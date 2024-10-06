@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include(router.urls)),  # API 경로를 router.urls로 연결
     path('memos/', views.memo_list, name='memo-list'),
     path('memos/<int:memo_id>/toggle_bookmark/', views.toggle_bookmark, name='toggle_bookmark'),
+    path('memos/<int:memo_id>/view/', views.view_memo, name="view_memo"),
 ]
