@@ -17,12 +17,6 @@
 import { formatDate } from '@/utils/format';
 
 export default {
-  props: {
-    memo: {
-      type: Object,
-      required: true,
-    }
-  },
   data() {
     return {
       memoData: {} // props에서 받은 memo를 저장할 새로운 변수
@@ -32,7 +26,12 @@ export default {
     // 쿼리에서 memo를 가져와서 JSON 파싱
     const memoString = this.$route.query.memo;
     if (memoString) {
-      this.memoData = JSON.parse(memoString);  // JSON 문자열을 객체로 변환
+      try {
+        this.memoData = JSON.parse(memoString);   // JSON 문자열을 객체로 변환
+      } catch (error) {
+        console.error('Memo 파싱 오류:', error);
+        this.memoData = {};  // 오류 발생 시 기본값 설정
+      }
     } else {
       this.memoData = this.memo;  /// props에서 memo가 전달된 경우
     }
