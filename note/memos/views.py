@@ -49,8 +49,14 @@ def create_memo(request):
 # 메모 조회
 def view_memo(request, memo_id):
     memo = get_object_or_404(Memo, id=memo_id)
-    if memo.is_locked:
-        entered_password = request.POST.get('password')
+    
+    # 요청이 POST인 경우에만 비밀번호를 체크합니다.
+    if request.method == 'POST' and memo.is_locked:
+        data = json.loads(request.body)
+        entered_password = data.get('password')  # JSON 데이터에서 비밀번호 추출
+
         if entered_password != memo.password:
             return JsonResponse({"error": "비밀번호가 틀렸습니다."}, status=403)
+    
+    # 비밀번호가 올바르거나 메모가 잠겨있지 않을 경우 메모 반환
     return JsonResponse({"title": memo.title, "content": memo.content})
