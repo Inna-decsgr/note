@@ -54,6 +54,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 허용할 출처
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",  # Vue.js가 실행 중인 URL
+    "http://127.0.0.1:8080"
+]
+
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+]
+
+
+CSRF_COOKIE_HTTPONLY = False  # JavaScript에서 쿠키 접근 가능
+CSRF_COOKIE_SECURE = False
+
+
+
 ROOT_URLCONF = 'note.urls'
 
 TEMPLATES = [
@@ -121,7 +141,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CORS_ALLOW_ALL_ORIGINS = True
+
 
 
 # Static files (CSS, JavaScript, Images)
