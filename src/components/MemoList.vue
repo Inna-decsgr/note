@@ -12,7 +12,7 @@
             <p>이 메모는 잠금된 메모입니다. 비밀번호를 입력해주세요.</p>
             <input 
               type="password" 
-              v-model="password" 
+              v-model="passwords[memo.id]" 
               placeholder="비밀번호를 입력해주세요"
             >
             <button @click="unlockMemo(memo)">확인</button>
@@ -48,13 +48,28 @@ export default {
   },
   data() {
     return {
-      password: '',
+      passwords: {},
       error: '',
       // 메모별로 비밀번호 입력 폼 표시 여부를 관리하는 객체
       isPasswordFormVisible: {},
     }
   },
   methods: {
+    getCsrfToken() {
+      const csrfCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='));
+      
+      if (csrfCookie) {
+        return csrfCookie.split('=')[1];  // 'csrftoken=' 이후의 값을 반환
+      } else {
+        return null;  // CSRF 토큰을 찾지 못하면 null 반환
+      }
+    },
+    mounted() {
+      // CSRF 토큰을 초기 설정에 추가
+      axios.defaults.headers.common['X-CSRFToken'] = this.getCsrfToken();
+    },
     handleClick(memo) {
       if (memo.is_locked) {
         this.showPasswordForm(memo);
@@ -70,17 +85,32 @@ export default {
     },
     // 서버에 비밀번호를 전송해서 잠금 해제 요청
     async unlockMemo(memo) {
+      const csrfToken = this.getCsrfToken();
+      console.log('CSRF Token:', csrfToken);
+      console.log('Password:', this.passwords[memo.id]);
+
       try {
+        console.log('CSRF Token:', this.csrfToken);
+        console.log('Password:', this.passwords[memo.id]);
+
         const response = await axios.post(`http://localhost:8000/api/memos/${memo.id}/view/`, {
-          password: this.password,
+          password: this.passwords[memo.id],  // 메모ID에 해당하는 비밀번호 사용
+        }, {
+          headers: {
+            'X-CSRFToken': csrfToken,
+          },
+          withCredentials: true
         });
 
         // 서버 응답 처리
         const data = response.data;
         memo.content = data.content;
         this.isPasswordFormVisible[memo.id] = false;  // 잠금 해제 시 촘 숨김
-        this.password = '';  // 비밀번호 입력 필드 초기화
+        this.passwords[memo.id] = '';  // 비밀번호 입력 필드 초기화
         this.error = '';  // 오류 메시지 초기화
+
+        // 비밀번호가 올바르면 상세 페이지로 이동
+        this.gotoDetail(memo);  // 상세 페이지로 이동
       } catch (error) {
         if (error.response && error.response.status === 403) {
           this.error = error.response.data.error;  // 비밀번호 틀림
