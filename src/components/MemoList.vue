@@ -1,5 +1,6 @@
 <template>
   <div class="memo-list">
+    <p v-if="memos.length"><span class="memocount">{{ memos.length }}</span>개의 메모</p>
     <ul v-if="memos.length">
       <li v-for="memo in memos" :key="memo.id" @click="handleClick(memo)" class="d-flex justify-content-between align-items-center">
         <div class="flex-grow-1 me-3">
@@ -157,6 +158,10 @@ li {
   border-radius: 5px;
 }
 
+.memocount{
+  font-weight: bold;
+}
+
 .memo-list {
   margin-top: 20px;
 }
@@ -195,5 +200,7 @@ li {
   line-height: 1 !important;
   margin-right: 5px !important;
 }
+
+
 
 </style>
