@@ -1,9 +1,8 @@
 <template>
   <div class="memo-detail">
-    <h1>{{ memoData.title }}</h1>
-    <p>{{ memoData.content }}</p>
-    <span>{{ formatDate(memoData.created_at) }}</span>
-
+    <span class="detailtitle">{{ memoData.title }}</span>
+    <p class="detailcontent">{{ memoData.content }}</p>
+    <span class="detaildate">{{ formatDate(memoData.created_at) }}</span>
     <div>
       <button @click="editmemo(memoData)" class="btn btn-secondary custom-btn">메모 수정</button>
       <button @click="deletememo(memoData.id)" class="btn btn-secondary custom-btn">삭제</button>
@@ -53,3 +52,21 @@ export default {
   }
 }
 </script>
+
+<style>
+.detailtitle {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.detailcontent {
+  font-size: 17px;
+  padding: 15px 0 50px 0;
+}
+
+
+.detaildate{ 
+  font-size: 13px;
+  color: gray;
+}
+</style>
