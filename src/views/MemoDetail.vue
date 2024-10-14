@@ -1,11 +1,18 @@
 <template>
   <div class="memo-detail">
-    <span class="detailtitle">{{ memoData.title }}</span>
+    <div class="title-container">
+      <div class="memotitle">
+        <span class="detailtitle">{{ memoData.title }}</span>
+        <span class="detaildate">{{ formatDate(memoData.created_at) }}</span>
+      </div>
+      <div class="button-group">
+        <button @click="editmemo(memoData)" class="btn btn-secondary custom-btn">수정</button>
+        <button @click="deletememo(memoData.id)" class="btn btn-secondary custom-btn">삭제</button>
+      </div>
+    </div>
     <p class="detailcontent">{{ memoData.content }}</p>
-    <span class="detaildate">{{ formatDate(memoData.created_at) }}</span>
-    <div>
-      <button @click="editmemo(memoData)" class="btn btn-secondary custom-btn">메모 수정</button>
-      <button @click="deletememo(memoData.id)" class="btn btn-secondary custom-btn">삭제</button>
+    <div class="homebutton">
+      <button @click="gotoDetail(memo)" class="btn btn-secondary custom-btn">홈으로</button>
     </div>
   </div>
 </template>
@@ -49,24 +56,61 @@ export default {
       // 삭제 요청을 부모 컴포넌트에 전달, 부모 컴포넌트의 삭제 로직 실행시키도록
       this.$emit('delete-memo', memoId);
     },
+    gotoDetail(memo) {
+      this.$router.push({
+        path: '/',
+        query: {
+          memo: JSON.stringify(memo)  // memo 객체를 JSON 문자열로 변환하여 전송
+        }
+      })
+    },
   }
 }
 </script>
 
 <style>
+.memo-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.memotitle {
+  display: flex;
+  align-items: baseline;
+}
 .detailtitle {
   font-size: 30px;
   font-weight: bold;
+  margin-right: 10px;
+}
+
+.button-group {
+  display: flex;
+}
+
+.button-group button {
+  margin-top: 0;
 }
 
 .detailcontent {
   font-size: 17px;
-  padding: 15px 0 50px 0;
+  padding: 35px 0 60px 0;
 }
-
 
 .detaildate{ 
   font-size: 13px;
   color: gray;
+}
+
+.homebutton {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
