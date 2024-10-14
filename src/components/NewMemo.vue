@@ -64,7 +64,7 @@ export default {
     };
   },
   watch: {
-    // existMemo가 변경되면 memo 값도 자동으로 업데이트
+    // existMemo가 변경되면 memo 값도 수정된 내용으로 자동으로 업데이트
     existMemo(newMemo) {
       this.memo = {...newMemo}
     }
@@ -115,8 +115,8 @@ export default {
 }
 
 .form-control::placeholder {
-  font-size: 13px; /* Placeholder 텍스트 크기 조정 */
-  color: #888; /* Placeholder 텍스트 색상 조정 */
+  font-size: 13px; 
+  color: #888; 
 }
 
 .btn {
