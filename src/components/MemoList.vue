@@ -20,10 +20,15 @@
             <p v-if="error">{{ error }}</p>
           </div>
 
-          <!-- 비밀전호를 입력하지 않으면 내용 숨김-->
-          <p v-else class="memo-content">
-            {{ memo.content }}
-          </p>
+          <!-- 비밀번호를 입력하지 않으면 내용 숨김-->
+          <div class="memo-content">
+            <p v-if="memo.is_locked">
+              <span>잠금된 메모입니다.</span>
+            </p>
+            <p v-else class="memo-content">
+              {{ memo.content }}
+            </p>
+          </div>
           <span class="memo-date">{{ formatDate(memo.created_at) }}</span>
         </div>
         <button class="starbutton btn btn-secondary custom-btn" @click="toggleBookmark(memo)">
@@ -78,7 +83,6 @@ export default {
         this.gotoDetail(memo);
       }
     },
-    // 잠금된 메모를 클릭하면 비밀번호 입력 폼을 표시
     showPasswordForm(memo) {
       this.isPasswordFormVisible[memo.id] = true;
       this.error = '';
@@ -87,13 +91,8 @@ export default {
     // 서버에 비밀번호를 전송해서 잠금 해제 요청
     async unlockMemo(memo) {
       const csrfToken = this.getCsrfToken();
-      console.log('CSRF Token:', csrfToken);
-      console.log('Password:', this.passwords[memo.id]);
 
       try {
-        console.log('CSRF Token:', this.csrfToken);
-        console.log('Password:', this.passwords[memo.id]);
-
         const response = await axios.post(`http://localhost:8000/api/memos/${memo.id}/view/`, {
           password: this.passwords[memo.id],  // 메모ID에 해당하는 비밀번호 사용
         }, {
@@ -106,7 +105,7 @@ export default {
         // 서버 응답 처리
         const data = response.data;
         memo.content = data.content;
-        this.isPasswordFormVisible[memo.id] = false;  // 잠금 해제 시 촘 숨김
+        this.isPasswordFormVisible[memo.id] = false;  // 잠금 해제 시 폼 숨김
         this.passwords[memo.id] = '';  // 비밀번호 입력 필드 초기화
         this.error = '';  // 오류 메시지 초기화
 
@@ -173,7 +172,7 @@ li {
 
 .memo-content {
   font-size: 13px;
-  margin-top: 5px;
+  margin: 5px 0 10px 0;
   height: 20px;
 }
 
