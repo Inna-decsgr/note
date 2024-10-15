@@ -36,7 +36,7 @@ QuickNote의 주요 목표는 사용자가 쉽고 안전하게 메모를 작성�
 
 
 ### 문제 해결
-* **🟥 문제 1 : POST 요청 시 `ERR_CONNECTION_REFUSED` 발생**
+**🟥 문제 1 : POST 요청 시 `ERR_CONNECTION_REFUSED` 발생**
   
 🫁 **문제 내용**: Vue.js에서 Django로 POST 요청을 보냈을 때 서버가 요청을 거부하여 `ERR_CONNECTION_REFUSED` 에러가 발생.
 
@@ -64,7 +64,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 🫁 **결론** : CORS 문제는 여러 포트를 사용하는 개발 환경에서 빈번하게 발생하는 이슈임을 인지하고, 이를 처리하는 방법을 학습할 수 있었음. 개발 환경에서의 보안 정책에 대한 이해를 높이는 기회가 되었음.  
 🫁 **블로그 참고**: https://velog.io/@kimina/Django-MySQL-%EA%B5%AC%ED%98%84%ED%95%9C-%EA%B0%84%EB%8B%A8-%EB%A9%94%EB%AA%A8%EC%9E%A5-3-%EB%A9%94%EB%AA%A8-%EC%A0%80%EC%9E%A5-%EB%B0%8F-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0-MySQL%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-%EA%B0%84%EB%8B%A8%ED%95%9C-%EA%B5%AC%ED%98%84
 
-**🟥문제 2: 403 Forbidden 오류 발생 (CSRF Token 문제)**  
+**🟥 문제 2: 403 Forbidden 오류 발생 (CSRF Token 문제)**  
 
 🫁 **문제 내용**:  Vue.js에서 Django로 데이터를 전송할 때, 403 Forbidden 오류가 발생하며 서버에서 CSRF(Cross-Site Request Forgery) 토큰이 없다는 경고가 표시됨  
 
